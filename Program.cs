@@ -1,58 +1,91 @@
-﻿namespace AbbySELLERMANAGEMENT
+﻿namespace aa
 {
     internal class Program
     {
+        static List<string> sellerProfile = new List<string>();
+        static List<string> sellerProduct = new List<string>();
+        static List<double> sellerPrice = new List<double>();
+
         static void Main(string[] args)
         {
 
             // E-Commerce - SELLER PROFILE MANAGEMENT TAS MGA PRODUCTS ++ CRUDE (create, read, update, delete, execute) DAPAT
 
             int pick = 0;
-            Console.WriteLine("Welcome to E-Commerce Seller Profile Management System");
+            string restart = "true";
 
+            sellerProfile.Add("Almadin_Shop");
+            sellerProduct.Add("Powerbank");
+            sellerPrice.Add(99.99);
 
-            Console.WriteLine("0. View Profile");
-            Console.WriteLine("1. Edit Profile");
-            Console.WriteLine("2. Read product details");
-            Console.WriteLine("3. Update product information");
-            Console.WriteLine("4. Delete a product");
-            Console.WriteLine("===================");
-            Console.Write("Choose an option: ");
-            pick = Convert.ToInt32(Console.ReadLine());
+            sellerProfile.Add("Abbygael_Bakery");
+            sellerProduct.Add("Crinkles");
+            sellerPrice.Add(7.00);
 
-            switch (pick)
+            do
             {
-                case 0:
+                Console.WriteLine(" ");
+                Console.WriteLine("Welcome to E-Commerce Seller Profile Management System");
+                Console.WriteLine(" ");
+                Console.WriteLine("===================");
+                Console.WriteLine("0. View Profile");
+                Console.WriteLine("1. Add Seller Profile");
+                Console.WriteLine("2. Update Profile information");
+                Console.WriteLine("3. Delete a Profile");
+                Console.WriteLine("===================");
+                Console.WriteLine(" ");
+                Console.Write("Choose an option: ");
+                pick = Convert.ToInt32(Console.ReadLine());
 
-                    Console.WriteLine("Seller Profile's E-Commerce");
+                switch (pick)
+                {
+                    case 0:
+                        // view
 
-                    Console.WriteLine("Seller Profile");
-                    Console.WriteLine("Name: Abbygael Almadin");
-                    Console.WriteLine("Brandname: Cutie Bakery");
-                    Console.Write("Ratings: 9.9/10 ~");
-                    Console.Write(" Reviews: 99");
+                        Console.WriteLine("Seller Profiles");
+                        Console.WriteLine(" ");
 
-                    Console.WriteLine("Products: ");
+                        for (int i = 0; i < sellerProfile.Count; i++)
+                        {
+                            Console.WriteLine($"[{i + 1}] Profile: {sellerProfile[i]} Product: {sellerProduct[i]}, Price: {sellerPrice[i]}");
+                        }
 
-                    break;
-                case 1:
-                    //Create a new product code
-                    break;
-                case 2:
-                    //Read product details code
-                    break;
-                case 3:
-                    //Update product information code
-                    break;
-                case 4:
-                    //Delete a product code
-                    break;
-                default:
-                    Console.WriteLine("Invalid option. Please select a valid option.");
-                    break;
-            }
+                        break;
+                    case 1:
 
 
+                        //Add new Product
+
+                        Console.WriteLine("You are ADDING a new Seller Profile: ");
+                        Console.WriteLine(" ");
+
+                        Console.Write("Seller Name: ");
+                        string name = Console.ReadLine();
+
+                        Console.Write("Product Name: ");
+                        string product = Console.ReadLine();
+
+                        Console.Write("Price: ");
+                        double price = double.Parse(Console.ReadLine());
+
+                        sellerProfile.Add(name);
+                        sellerProduct.Add(product);
+                        sellerPrice.Add(price);
+                        Console.WriteLine($"Successfully added product {product} !");
+
+                        break;
+                    case 2:
+                        //Update product information code
+                        break;
+                    case 3:
+                        //Delete a product code
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid option. Please select a valid option.");
+                        break;
+                }
+            } while (restart == "true");
 
         }
     }
