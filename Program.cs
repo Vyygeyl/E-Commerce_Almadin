@@ -1,26 +1,16 @@
-﻿namespace aa
+﻿using E_CommerceModels;
+using E_CommerceAppService;
+
+namespace E_CommerceUI
 {
     internal class Program
     {
-        static List<string> sellerProfile = new List<string>();
-        static List<string> sellerProduct = new List<string>();
-        static List<double> sellerPrice = new List<double>();
+        static SellerAppService sellerAppService = new SellerAppService();
 
         static void Main(string[] args)
         {
-
-            // E-Commerce - SELLER PROFILE MANAGEMENT TAS MGA PRODUCTS ++ CRUDE (create, read, update, delete, execute) DAPAT
-
-            int pick = 0;
+            int pick;
             string restart = "true";
-
-            sellerProfile.Add("Almadin_Shop");
-            sellerProduct.Add("Powerbank");
-            sellerPrice.Add(99.99);
-
-            sellerProfile.Add("Abbygael_Bakery");
-            sellerProduct.Add("Crinkles");
-            sellerPrice.Add(7.00);
 
             do
             {
@@ -28,10 +18,10 @@
                 Console.WriteLine("Welcome to E-Commerce Seller Profile Management System");
                 Console.WriteLine(" ");
                 Console.WriteLine("===================");
-                Console.WriteLine("0. View Profile");
+                Console.WriteLine("0. View Seller Profiles");
                 Console.WriteLine("1. Add Seller Profile");
-                Console.WriteLine("2. Update Profile information");
-                Console.WriteLine("3. Delete a Profile");
+                Console.WriteLine("2. Update Seller Profile");
+                Console.WriteLine("3. Delete a Seller Profile");
                 Console.WriteLine("===================");
                 Console.WriteLine(" ");
                 Console.Write("Choose an option: ");
@@ -40,53 +30,96 @@
                 switch (pick)
                 {
                     case 0:
-                        // view
-
-                        Console.WriteLine("Seller Profiles");
-                        Console.WriteLine(" ");
-
-                        for (int i = 0; i < sellerProfile.Count; i++)
-                        {
-                            Console.WriteLine($"[{i + 1}] Profile: {sellerProfile[i]} Product: {sellerProduct[i]}, Price: {sellerPrice[i]}");
-                        }
-
+                        ViewSellers();
                         break;
                     case 1:
-
-
-                        //Add new Product
-
-                        Console.WriteLine("You are ADDING a new Seller Profile: ");
-                        Console.WriteLine(" ");
-
-                        Console.Write("Seller Name: ");
-                        string name = Console.ReadLine();
-
-                        Console.Write("Product Name: ");
-                        string product = Console.ReadLine();
-
-                        Console.Write("Price: ");
-                        double price = double.Parse(Console.ReadLine());
-
-                        sellerProfile.Add(name);
-                        sellerProduct.Add(product);
-                        sellerPrice.Add(price);
-                        Console.WriteLine($"Successfully added product {product} !");
-
+                        AddSeller();
                         break;
                     case 2:
-                        //Update product information code
+                        // Update
                         break;
                     case 3:
-                        //Delete a product code
+                        // Delete
                         break;
-
                     default:
                         Console.WriteLine("Invalid option. Please select a valid option.");
                         break;
                 }
-            } while (restart == "true");
 
+            } while (restart == "true");
+        }
+
+        static void ViewSellers()
+        {
+            Console.WriteLine("\nSeller Profiles");
+            Console.WriteLine(" ");
+
+            var sellers = sellerAppService.GetSellers();
+
+            for (int i = 0; i < sellers.Count; i++)
+            {
+                Console.WriteLine($"[{i + 1}] Seller: {sellers[i].SellerName}");
+                Console.WriteLine("Products:");
+
+                if (sellers[i].ProductName != null && sellers[i].ProductName.Count > 0)
+                {
+                    foreach (var product in sellers[i].ProductName)
+                    {
+                        Console.WriteLine($"  - {product.ProductName} : {product.ProductPrice}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No products yet.");
+                }
+
+                Console.WriteLine(" ");
+            }
+        }
+
+        static void AddSeller()
+        {
+            Console.WriteLine("\nYou are ADDING a new Seller Profile:");
+            Console.Write("Seller Name: ");
+            string name = Console.ReadLine();
+
+            SellerProfile newSeller = new SellerProfile();
+            newSeller.SellerID = Guid.NewGuid();
+            newSeller.SellerName = name;
+            newSeller.ProductName = new List<Product>();
+
+            Console.Write("\nTotal number of Products for " + name + ":");
+
+            int count = Convert.ToInt32(Console.ReadLine());
+
+            for (int i = 0; i < count; i++)
+            {
+                Console.WriteLine("\nProduct " + (i + 1));
+
+                Console.Write("Product Name: ");
+                string productName = Console.ReadLine();
+                Console.Write("Price: ");
+                double price = double.Parse(Console.ReadLine());
+
+                Product newProduct = new Product();
+                newProduct.ProductID = Guid.NewGuid();
+                newProduct.ProductName = productName;
+                newProduct.ProductPrice = price;
+
+                newSeller.ProductName.Add(newProduct);
+            }
+
+            bool success = sellerAppService.CheckSeller(newSeller);
+
+            if (success)
+            {
+                Console.WriteLine("\nSuccessfully added Seller" +name);
+                Console.WriteLine("Successfully added " + count + " Products");
+            }
+            else
+            {
+                Console.WriteLine("\nSeller " + name + "already exists!");
+            }
         }
     }
 }
